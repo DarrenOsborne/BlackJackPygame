@@ -1,0 +1,89 @@
+'''import pygame
+from pygame.locals import *
+import random
+
+width, height = (800, 800)
+size = width, height
+print (size)
+table=size = int(width/1.2)
+roadmark_w = int(width/80)
+level = 1
+score = 0
+pygame.init()
+
+running = True
+#setting display
+screen = pygame.display.set_mode(size)
+#setting background
+screen.fill((90, 90, 90))
+
+def drawThings():
+  pygame.draw.rect(screen, (50,50,50), (width/2, 0, width/2, height/2))
+  #pygame.draw.rect(screen, (53,101,77), (width/2,))
+
+
+pygame.display.set_caption("Darren")
+pygame.display.update()
+
+#score font
+myFont = pygame.font.SysFont("Times New Roman", 18)
+scoreText = myFont.render("Score: "+str(score), 1, "black")'''
+
+#loading images in
+'''car = pygame.image.load("C:\\Users\\Darren Osborne\\Documents\\Programming\\CarGame\\TheCar.png")
+car_loc = car.get_rect()
+car_loc.center = 0, height*0.8'''
+
+'''Ecar = pygame.image.load("C:\\Users\\Darren Osborne\\Documents\\Programming\\CarGame\\EnemyCar.png")
+ecar_loc = Ecar.get_rect()
+ecar_loc.center = 0, height*0.2'''
+
+#crafted coordinate containers
+car_locContainer = 0
+ecar_locContainer = 0
+
+#game loop
+'''while(running):
+  #animating enemy car
+  ecar_loc[1]+=level
+  if ecar_loc[1]> height:
+    score+=1
+    level+=0.05
+    
+    if random.randint(0,1) ==0:
+      ecar_loc.center = 0, -200
+    else:
+      ecar_loc.center = 0, -200
+  
+  #endgamecondition
+  if car_loc[0] == ecar_loc[0] and ecar_loc[1] > car_loc[1] - 300:
+    print("GAME OVER")
+    print("Your score was "+str(score))
+    break
+
+  #event listeners
+  for event in pygame.event.get():
+    if event.type == QUIT:
+      running = False
+    if event.type == KEYDOWN:
+      if event.key in [K_h]:
+        car_loc = car_loc.move([-int(road_w/2), 0])
+        car_locContainer-=1
+      if event.key in [K_s, K_RIGHT]and car_locContainer == -1:
+        car_loc = car_loc.move([int(road_w/2), 0])
+        car_locContainer+=1
+  drawThings()
+  #updating score (needs fixing)
+  scoreText = myFont.render("Score: "+str(score), 1, "black")
+  screen.blit(scoreText, (10,10))
+  #updating cars
+  screen.blit(car, car_loc)
+  screen.blit(Ecar, ecar_loc)
+  pygame.display.update()'''
+
+#pygame.quit()
+
+player_position = {
+    1: (350,350)
+}
+position = player_position[1][0]
