@@ -76,8 +76,6 @@ def draw_table_and_buttons():
     text_surface = button_font.render("Split", True, (50, 50, 50))
     screen.blit(text_surface, (split_button_loc))
 
-
-
 # Build card
 def display_card(player):
     card = draw_card()
@@ -87,23 +85,30 @@ def display_card(player):
     #the position refers to the position dictionaries
     if player:
         global player_card_position
-        player_card_position=+1
+        player_card_position+=1
         position = player_card_position
         x = player_positions[position][0]
         y = player_positions[position][1]
-        
-        track_dealer_hand_value(card[1])
+        #adding the value of the card to the hand
+        track_player_hand_value(card)
     else:
         global dealer_card_position
-        dealer_card_position=+1
+        dealer_card_position+=1
         position = dealer_card_position
         x = dealer_positions[position][0]
         y = dealer_positions[position][1]
+        #adding the value of the card to the hand
+        track_dealer_hand_value(card)
+    #drawing the card
     pygame.draw.rect(screen, ("black"), (x-3, y-3, 56, 76))
     pygame.draw.rect(screen, ("white"), (x, y, 50, 70))
     text_surface = card_font.render(card, True, color)
     screen.blit(text_surface, (x + 2, y + 2))
-    return card
+
+def display_dealer_downcard():
+    x = 420
+    y = 120
+    pygame.draw.rect(screen, ("black"), (x-3, y-3, 56, 76))
 
 def Xquit():
     for event in pygame.event.get():
@@ -113,17 +118,20 @@ def Xquit():
             
 def click_decisions():
     for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONUP:
+            print("clicked")
             mouse_pos = pygame.mouse.get_pos()
             if stand_button_rect.collidepoint(mouse_pos):
-                    return ("stand")
+                return ("stand")
             if hit_button_rect.collidepoint(mouse_pos):
-                    return ("hit")
+                return ("hit")
             if double_button_rect.collidepoint(mouse_pos):
-                    return ("double")
+                return ("double")
             if split_button_rect.collidepoint(mouse_pos):
-                    return ("split")
-            
+                return ("split")
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 
 #state conditions
 initial_state = True
@@ -133,14 +141,18 @@ player_decision_state = True
 dealer_draw_state = True
 round_result_state = True
 running = True
+player_busted = False
 player_won = False
+pushed = False
 blackjack = False
+reshuffle()
 # Game loop
 while running:
     Xquit()
     
     #every game starts here
     while initial_state:
+        print("In initial state")
         Xquit()
         initial_state = True
         betting_state = True
@@ -148,7 +160,8 @@ while running:
         player_decision_state = True
         dealer_draw_state = True
         round_result_state = True
-        player_won = False
+        player_busted = False
+        player_one = False
         blackjack = False
         draw_table_and_buttons()
         reset_hand_and_value()
@@ -167,65 +180,70 @@ while running:
     
     #dealing, blackjack would be directed here
     while deal_cards_state:
+        print("In deal cards state")
         Xquit()
         display_card(True)
         display_card(False)
         display_card(True)
-        display_card(False)
+        display_dealer_downcard()
         deal_cards_state = False
-        if player_hand_value == 21 and dealer_hand_value != 21:
-            player_won = True
-            blackjack = True
-            player_decision_state = False
-            dealer_draw_state = False
+        if player_hand_value == 21:
+            display_card(False)
+            if dealer_hand_value == 21:
+                push = True
+                player_won = False
+                player_decision_state = False
+                dealer_draw_state = False
+            else:
+                player_won = True
+                blackjack = True
+                player_decision_state = False
+                dealer_draw_state = False
 
-             
         pygame.display.flip()
         break
     
     #stay, hit, double, split #buttons are active
     while player_decision_state:
-        Xquit()
+        #Xquit is inside the click desisions
         click = click_decisions()
         if click:
             if click == "stand":
                 player_decision_state = False
                 break
             if click == "hit":
-                display_card(True) 
+                display_card(True)
             if click == "double":
                 display_card(True)
         if player_hand_value >= 21:
-             player_decision_state = False
-             break
+            player_decision_state = False
+            dealer_decision_state = False
+            if player_hand_value > 21:
+                player_busted = True
+            break
         pygame.display.flip()
     #draws until 17
     while dealer_draw_state:
+        print("In dealer draw state")
         Xquit()
+        if dealer_hand_value >= 21:
+            dealer_decision_state = False
+            dealer_busted = True
+            break
         if dealer_hand_value < 17:
-             display_card(False)
+            display_card(False)
+        else:
+             break
         pygame.display.flip()
-        break
     
     #take or add chips
     #display round result
     while round_result_state:
+        print("In round result state")
         Xquit()
 
+        if player_won:
+            print("You won!")
+        else:
+            print("You lost!")
         break
-    
-    draw_table_and_buttons()
-    display_card("9", True, "1")
-    display_card("T", True, "2")
-    display_card("A", True, "3")
-    display_card("Q", True, "4")
-    display_card("2", True, "5")
-    display_card("8", True, "6")
-    display_card("9", False, "1")
-    display_card("T", False, "2")
-    display_card("A", False, "3")
-    display_card("Q", False, "4")
-    display_card("2", False, "5")
-    display_card("8", False, "6")
-
-    pygame.display.flip()

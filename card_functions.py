@@ -1,5 +1,15 @@
 from random import shuffle, randint
 
+#delcaring all global variables
+deck = []
+count = 0
+player_hand_value = 0
+player_hand = 0
+dealer_hand_value = 0
+dealer_hand = 0
+player_card_position = 0
+dealer_card_position = 0
+
 #initializes the deck which is (6 decks worth of cards 2-A * 4 * 6)
 def reshuffle():
   global deck
@@ -50,13 +60,7 @@ def draw_card():
   update_count(card)
   #turning the string into an int
   track_player_hand_value(card)
-  if card in ["2","3", "4", "5", "6","7","8", "9"]:
-    value = int(card)
-  elif card == "A":
-    value = 1
-  else:
-    value = 10
-  return card, value
+  return card
 
 def track_player_hand_value(card):
     values = {'A': 11, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'T': 10, 'J': 10, 'Q': 10, 'K': 10}
@@ -77,7 +81,7 @@ def track_player_hand_value(card):
     player_hand_value = hand_value
 
 def track_dealer_hand_value(card):
-    values = {'A': 11, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10}
+    values = {'A': 11, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'T': 10, 'J': 10, 'Q': 10, 'K': 10}
     global dealer_hand, dealer_hand_value  # Declare global variables
     dealer_hand.append(card)
 
@@ -109,7 +113,7 @@ def reset_card_positions():
   dealer_card_position = 0
 
 
-count = 0
+'''count = 0
 player_turn = True
 dealer_total = 0
 player_total = 0
@@ -155,4 +159,4 @@ elif player_total > dealer_total:
 elif player_total == dealer_total:
   print("Tie. Push.")
 else:
-  print("You lost.")
+  print("You lost.")'''
